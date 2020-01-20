@@ -1,0 +1,9 @@
+server:
+  port: 10002
+
+keycloak:
+  realm: master
+  resource: demo
+  auth-server-url: http://localhost:8080/auth
+  public-client: true
+  principal-attribute: preferred_username
