@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.NotAuthorizedException;
+import java.security.Principal;
 
 /**
  * Resource class offering a method to authenticated against Keycloak.
@@ -26,15 +27,21 @@ public class LoginResource {
      * ReST endpoint taking username and password to authenticate against Keycloak.
      * If the login was successful, the JWTs received, will be returned in cookies.
      *
-     * @param username the user's username
-     * @param password the user's password
-     * @param response {@link HttpServletResponse} for the cookie handling
+     * @param username  the user's username
+     * @param password  the user's password
+     * @param response  {@link HttpServletResponse} for the cookie handling
+     * @param principal {@link Principal}
      * @return {@link ResponseEntity} describing the outcome of the login attempt
      */
     @RequestMapping(path = "/api/login", method = RequestMethod.GET)
     public ResponseEntity<String> login(@RequestParam String username,
                                         @RequestParam String password,
-                                        HttpServletResponse response) {
+                                        HttpServletResponse response,
+                                        Principal principal) {
+        if (principal != null) {
+            return ResponseEntity.ok("Already logged in");
+        }
+
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl("http://localhost:8080/auth")
                 .username(username)
